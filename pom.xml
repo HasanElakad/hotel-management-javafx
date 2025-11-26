@@ -23,6 +23,13 @@
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        
+        <dependency>
+    <groupId>io.github.palexdev</groupId>
+    <artifactId>materialfx</artifactId>
+    <version>11.13.6</version>
+</dependency>
+
 
         <!-- JavaFX FXML -->
         <dependency>

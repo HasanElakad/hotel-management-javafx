@@ -57,55 +57,106 @@
     -fx-text-fill: #f97373;
     -fx-font-size: 11px;
 }
-/* dashboard background */
 .dashboard-root {
-    -fx-background-color: linear-gradient(to bottom, #020617, #0b1120);
+    -fx-background-color: linear-gradient(to bottom, #020617, #020617);
 }
 
-.dashboard-box {
-    -fx-spacing: 16;
+/* sidebar */
+.sidebar {
+    -fx-background-color: #020617;
+    -fx-spacing: 20;
 }
 
-.dashboard-title {
+.sidebar-title {
     -fx-text-fill: #e5e7eb;
-    -fx-font-size: 24px;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
 }
 
-/* card container */
-.room-grid {
-    -fx-alignment: center;
+.sidebar-menu {
+    -fx-spacing: 6;
+}
+
+.sidebar-item {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 12px;
+}
+
+.sidebar-item-active {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-weight: bold;
+}
+
+.sidebar-footer {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 11px;
+}
+
+/* main area */
+.main-area {
+    -fx-background-color: #020617;
+}
+
+/* top bar */
+.topbar-title {
+    -fx-text-fill: #f9fafb;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.topbar-subtitle {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 11px;
+}
+
+.primary-chip {
+    -fx-background-color: linear-gradient(to right, #3b82f6, #2563eb);
+    -fx-text-fill: white;
+    -fx-background-radius: 999;
+    -fx-padding: 4 14 4 14;
+    -fx-font-size: 11px;
+}
+
+/* cards */
+.card-row {
+    -fx-padding: 10 0 0 0;
 }
 
 .room-card {
-    -fx-background-color: rgba(15, 23, 42, 0.96);
-    -fx-background-radius: 14;
-    -fx-padding: 10;
-    -fx-spacing: 8;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 16, 0.2, 0, 4);
+    -fx-background-color: #0b1120;
+    -fx-background-radius: 18;
+    -fx-padding: 10 12 12 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 20, 0.25, 0, 6);
+    -fx-min-width: 230;
+    -fx-max-width: 260;
 }
 
-/* .room-image, .room-title, .room-subtitle, .room-button stay as before */
-
-
-/* image area inside card: uses login-bg */
-.room-image {
-    -fx-background-image: url("images/login-bg.jpg");
+.room-hero {
+    -fx-background-radius: 14;
     -fx-background-size: cover;
     -fx-background-position: center;
-    -fx-background-radius: 10;
 }
 
-/* optional tint per type */
-.single-card .room-image  { -fx-background-color: rgba(59,130,246,0.25); }
-.double-card .room-image  { -fx-background-color: rgba(234,179,8,0.25); }
-.suite-card  .room-image  { -fx-background-color: rgba(34,197,94,0.25); }
-.family-card .room-image  { -fx-background-color: rgba(244,63,94,0.25); }
+/* you can swap these for real images later */
+.single-hero {
+    -fx-background-color: linear-gradient(to right, #38bdf8, #2563eb);
+}
 
-/* labels + button */
+.double-hero {
+    -fx-background-color: linear-gradient(to right, #f97316, #ea580c);
+}
+
+.suite-hero {
+    -fx-background-color: linear-gradient(to right, #22c55e, #16a34a);
+}
+
+.family-hero {
+    -fx-background-color: linear-gradient(to right, #f97373, #e11d48);
+}
+
 .room-title {
     -fx-text-fill: #f9fafb;
-    -fx-font-size: 16px;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
 }
 
@@ -117,12 +168,12 @@
 .room-button {
     -fx-background-color: linear-gradient(to right, #3b82f6, #2563eb);
     -fx-text-fill: white;
-    -fx-background-radius: 6;
+    -fx-background-radius: 10;
     -fx-font-weight: bold;
+    -fx-font-size: 11px;
     -fx-padding: 6 10 6 10;
 }
 
 .room-button:hover {
     -fx-background-color: linear-gradient(to right, #2563eb, #1d4ed8);
 }
-
