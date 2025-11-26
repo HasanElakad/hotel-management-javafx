@@ -16,11 +16,20 @@ public class App extends Application {
     private static Scene scene;
 
     @Override
-    public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
-        stage.setScene(scene);
-        stage.show();
-    }
+public void start(Stage stage) throws IOException {
+    Parent root = loadFXML("login");
+    scene = new Scene(root, 640, 480);
+
+    // load styles.css from same package as App
+    scene.getStylesheets().add(
+            App.class.getResource("styles.css").toExternalForm()
+    );
+
+    stage.setScene(scene);
+    stage.setTitle("Hotel Login");
+    stage.show();
+}
+
 
     static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
