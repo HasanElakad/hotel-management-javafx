@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.hotel.management.javafx.controller.DashboardController"
+            styleClass="dashboard-root">
+
+    <children>
+        <!-- Outer VBox fills window -->
+        <VBox spacing="16"
+              AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+              AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+              styleClass="dashboard-box">
+
+            <children>
+                <!-- Title centered horizontally -->
+                <Label text="Room Types" styleClass="dashboard-title"/>
+
+                <!-- Wrapper VBox centers the grid -->
+                <VBox alignment="CENTER">
+                    <children>
+                        <GridPane hgap="20" vgap="20" styleClass="room-grid">
+
+                            <!-- Single: row 0, col 0 -->
+                            <VBox spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                  styleClass="room-card single-card">
+                                <children>
+                                    <Pane prefWidth="200" prefHeight="130" styleClass="room-image"/>
+                                    <Label text="Single Room" styleClass="room-title"/>
+                                    <Label text="1 guest • from $80/night" styleClass="room-subtitle"/>
+                                    <Button text="View / Reserve" styleClass="room-button"/>
+                                </children>
+                            </VBox>
+
+                            <!-- Double: row 0, col 1 -->
+                            <VBox spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                  styleClass="room-card double-card">
+                                <children>
+                                    <Pane prefWidth="200" prefHeight="130" styleClass="room-image"/>
+                                    <Label text="Double Room" styleClass="room-title"/>
+                                    <Label text="2 guests • from $120/night" styleClass="room-subtitle"/>
+                                    <Button text="View / Reserve" styleClass="room-button"/>
+                                </children>
+                            </VBox>
+
+                            <!-- Suite: row 1, col 0 -->
+                            <VBox spacing="8" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                                  styleClass="room-card suite-card">
+                                <children>
+                                    <Pane prefWidth="200" prefHeight="130" styleClass="room-image"/>
+                                    <Label text="Suite" styleClass="room-title"/>
+                                    <Label text="Up to 4 • from $220/night" styleClass="room-subtitle"/>
+                                    <Button text="View / Reserve" styleClass="room-button"/>
+                                </children>
+                            </VBox>
+
+                            <!-- Family: row 1, col 1 -->
+                            <VBox spacing="8" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                  styleClass="room-card family-card">
+                                <children>
+                                    <Pane prefWidth="200" prefHeight="130" styleClass="room-image"/>
+                                    <Label text="Family Room" styleClass="room-title"/>
+                                    <Label text="Up to 4 • from $180/night" styleClass="room-subtitle"/>
+                                    <Button text="View / Reserve" styleClass="room-button"/>
+                                </children>
+                            </VBox>
+
+                        </GridPane>
+                    </children>
+                </VBox>
+            </children>
+
+            <padding>
+                <Insets top="24" right="24" bottom="24" left="24"/>
+            </padding>
+        </VBox>
+    </children>
+</AnchorPane>

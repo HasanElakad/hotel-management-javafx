@@ -57,3 +57,72 @@
     -fx-text-fill: #f97373;
     -fx-font-size: 11px;
 }
+/* dashboard background */
+.dashboard-root {
+    -fx-background-color: linear-gradient(to bottom, #020617, #0b1120);
+}
+
+.dashboard-box {
+    -fx-spacing: 16;
+}
+
+.dashboard-title {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* card container */
+.room-grid {
+    -fx-alignment: center;
+}
+
+.room-card {
+    -fx-background-color: rgba(15, 23, 42, 0.96);
+    -fx-background-radius: 14;
+    -fx-padding: 10;
+    -fx-spacing: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 16, 0.2, 0, 4);
+}
+
+/* .room-image, .room-title, .room-subtitle, .room-button stay as before */
+
+
+/* image area inside card: uses login-bg */
+.room-image {
+    -fx-background-image: url("images/login-bg.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-radius: 10;
+}
+
+/* optional tint per type */
+.single-card .room-image  { -fx-background-color: rgba(59,130,246,0.25); }
+.double-card .room-image  { -fx-background-color: rgba(234,179,8,0.25); }
+.suite-card  .room-image  { -fx-background-color: rgba(34,197,94,0.25); }
+.family-card .room-image  { -fx-background-color: rgba(244,63,94,0.25); }
+
+/* labels + button */
+.room-title {
+    -fx-text-fill: #f9fafb;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.room-subtitle {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 11px;
+}
+
+.room-button {
+    -fx-background-color: linear-gradient(to right, #3b82f6, #2563eb);
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-font-weight: bold;
+    -fx-padding: 6 10 6 10;
+}
+
+.room-button:hover {
+    -fx-background-color: linear-gradient(to right, #2563eb, #1d4ed8);
+}
+

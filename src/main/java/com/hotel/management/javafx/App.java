@@ -17,8 +17,8 @@ public class App extends Application {
 
     @Override
 public void start(Stage stage) throws IOException {
-    Parent root = loadFXML("login");
-    scene = new Scene(root, 640, 480);
+    Parent root = loadFXML("dashboard");
+    scene = new Scene(root, 1200, 650);
 
     // load styles.css from same package as App
     scene.getStylesheets().add(
