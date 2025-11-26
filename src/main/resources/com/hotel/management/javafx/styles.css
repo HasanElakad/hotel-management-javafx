@@ -1,9 +1,59 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
-*/
-/* 
-    Created on : Nov 25, 2025, 9:19:45 PM
-    Author     : hasanmohamedothman
-*/
+.login-root {
+    -fx-background-color: linear-gradient(to bottom, #0f172a, #020617);
+    /* optional background image */
+    -fx-background-image: url("images/login-bg.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
 
+.login-box {
+    -fx-background-color: rgba(15, 23, 42, 0.85);
+    -fx-background-radius: 14;
+    -fx-padding: 24;
+    -fx-spacing: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 18, 0.2, 0, 6);
+}
+
+.login-title {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.login-subtitle {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 12px;
+}
+
+.text-field,
+.password-field {
+    -fx-background-radius: 6;
+    -fx-background-color: rgba(15,23,42,0.95);
+    -fx-text-fill: #e5e7eb;
+    -fx-prompt-text-fill: #6b7280;
+    -fx-border-color: #1f2937;
+    -fx-border-radius: 6;
+}
+
+.text-field:focused,
+.password-field:focused {
+    -fx-border-color: #3b82f6;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.5), 8, 0.3, 0, 0);
+}
+
+.primary-button {
+    -fx-background-color: linear-gradient(to right, #3b82f6, #2563eb);
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-font-weight: bold;
+}
+
+.primary-button:hover {
+    -fx-background-color: linear-gradient(to right, #2563eb, #1d4ed8);
+}
+
+.error-label {
+    -fx-text-fill: #f97373;
+    -fx-font-size: 11px;
+}

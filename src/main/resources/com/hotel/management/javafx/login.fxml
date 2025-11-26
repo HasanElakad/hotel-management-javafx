@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.hotel.management.javafx.controller.LoginController"
+            styleClass="login-root">
+
+    <children>
+        <VBox alignment="CENTER" spacing="12.0"
+              AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+              AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+              styleClass="login-box">
+            <children>
+                <Label text="AAST HOTEL" styleClass="login-title"/>
+                <Label text="Staff portal" styleClass="login-subtitle"/>
+
+                <TextField fx:id="usernameField"
+                           promptText="Username"
+                           prefWidth="230"
+                           styleClass="text-field"/>
+
+                <PasswordField fx:id="passwordField"
+                               promptText="Password"
+                               prefWidth="230"
+                               styleClass="password-field"/>
+
+                <Button text="Login"
+                        onAction="#handleLogin"
+                        prefWidth="230"
+                        styleClass="primary-button"/>
+
+                <Label fx:id="errorLabel" styleClass="error-label"/>
+            </children>
+            <padding>
+                <Insets top="24" right="24" bottom="24" left="24"/>
+            </padding>
+        </VBox>
+    </children>
+</AnchorPane>
