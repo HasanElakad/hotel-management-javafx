@@ -1,25 +1,10 @@
 .login-root {
     -fx-background-color: linear-gradient(to bottom, #0f172a, #020617);
-    /* optional background image */
     -fx-background-image: url("images/login-bg.jpg");
     -fx-background-size: cover;
     -fx-background-position: center;
     -fx-background-repeat: no-repeat;
 }
-/* shared background image */
-.login-bg {
-    -fx-background-image: url("images/login-bg.jpg");
-    -fx-background-size: cover;
-    -fx-background-position: center;
-    -fx-background-repeat: no-repeat;
-}
-
-/* login root uses same image + its own gradient if you want */
-.login-root {
-    -fx-background-color: linear-gradient(to bottom, #0f172a, #020617);
-    -fx-background-radius: 0;
-}
-
 
 .login-box {
     -fx-background-color: rgba(15, 23, 42, 0.85);
@@ -71,16 +56,17 @@
     -fx-text-fill: #f97373;
     -fx-font-size: 11px;
 }
+
+/* DASHBOARD CONTAINER */
 .dashboard-root {
-    -fx-background-color: linear-gradient(to bottom, #020617, #020617);
+    -fx-background-color: transparent;
 }
 
-/* sidebar */
+/* SIDEBAR */
 .sidebar {
-    -fx-background-color: #020617;
+    -fx-background-color: rgba(2, 6, 23, 0.92);
     -fx-spacing: 20;
 }
-
 .sidebar-title {
     -fx-text-fill: #e5e7eb;
     -fx-font-size: 20px;
@@ -106,17 +92,58 @@
     -fx-font-size: 11px;
 }
 
-/* main area */
-.main-area {
-    -fx-background-color: #020617;
+/* SIDEBAR BUTTONS */
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9ca3af;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 6 10 6 10;
+    -fx-background-radius: 8;
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
 }
 
-/* top bar */
+.sidebar-btn-active {
+    -fx-background-color: rgba(59,130,246,0.18);
+    -fx-text-fill: #e5e7eb;
+}
+
+.sidebar-btn:hover {
+    -fx-background-color: rgba(148,163,184,0.25);
+    -fx-text-fill: #e5e7eb;
+}
+
+.sidebar-btn:focused {
+    -fx-background-color: rgba(59,130,246,0.35);
+    -fx-text-fill: #e5e7eb;
+}
+
+.sidebar-logout-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f97373;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 6 10 6 10;
+    -fx-background-radius: 8;
+    -fx-font-size: 12px;
+}
+
+.sidebar-logout-btn:hover {
+    -fx-background-color: rgba(248,113,113,0.16);
+}
+
+/* MAIN AREA */
+.main-area {
+    /* removed background color to let image show through if desired,
+       or set -fx-background-color: #020617; if you want dark background behind cards */
+}
+
+/* TOP BAR */
 .topbar-title {
-    -fx-text-fill: #f9fafb;
+    -fx-text-fill: #2563eb;   /* blue */
     -fx-font-size: 18px;
     -fx-font-weight: bold;
 }
+
 
 .topbar-subtitle {
     -fx-text-fill: #9ca3af;
@@ -131,10 +158,11 @@
     -fx-font-size: 11px;
 }
 
-/* cards */
+/* ROOM CARDS */
 .card-row {
-    -fx-padding: 10 0 0 0;
+    -fx-padding: 10 0 0 -20;  /* top right bottom left */
 }
+
 
 .room-card {
     -fx-background-color: #0b1120;
@@ -151,7 +179,6 @@
     -fx-background-position: center;
 }
 
-/* you can swap these for real images later */
 .single-hero {
     -fx-background-color: linear-gradient(to right, #38bdf8, #2563eb);
 }

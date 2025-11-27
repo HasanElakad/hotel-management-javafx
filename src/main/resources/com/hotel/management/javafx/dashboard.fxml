@@ -1,60 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.control.Label?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            styleClass="dashboard-root login-bg">
-
+<AnchorPane
+        xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="com.hotel.management.javafx.controller.DashboardController"
+        styleClass="dashboard-root login-bg">
 
     <children>
-        <BorderPane AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
-                    AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <BorderPane
+                AnchorPane.topAnchor="0.0"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0">
 
             <!-- LEFT SIDEBAR -->
             <left>
-                <VBox spacing="20" styleClass="sidebar">
+                <VBox spacing="20.0" styleClass="sidebar">
                     <children>
-                        <Label text="HotelDesk" styleClass="sidebar-title"/>
 
-                        <VBox spacing="8" styleClass="sidebar-menu">
+                        <Label
+                                text="HotelDesk"
+                                styleClass="sidebar-title"/>
+
+                        <VBox spacing="6.0" styleClass="sidebar-menu">
                             <children>
-                                <Label text="Dashboard" styleClass="sidebar-item sidebar-item-active"/>
-                                <Label text="Reservations" styleClass="sidebar-item"/>
+                                <MFXButton
+                                        text="Dashboard"
+                                        styleClass="sidebar-btn sidebar-btn-active"/>
+                                <MFXButton
+                                        text="Reservations"
+                                        styleClass="sidebar-btn"/>
                             </children>
                         </VBox>
 
                         <Pane VBox.vgrow="ALWAYS"/>
 
-                        <Label text="Signed in as Reception"
-                               styleClass="sidebar-footer"/>
-                    </children>
+                        <MFXButton
+                                text="Logout"
+                                styleClass="sidebar-logout-btn"/>
 
+                        <Label
+                                text="Signed in as Admin"
+                                styleClass="sidebar-footer"/>
+
+                    </children>
                     <padding>
-                        <Insets top="20" right="16" bottom="20" left="20"/>
+                        <Insets top="20.0" right="16.0" bottom="20.0" left="20.0"/>
                     </padding>
                 </VBox>
             </left>
 
-            <!-- MAIN CONTENT -->
+            <!-- CENTER: ROOMS ONLY -->
             <center>
-                <VBox spacing="18" styleClass="main-area">
+                <VBox
+                        spacing="18.0"
+                        styleClass="main-area">
                     <children>
 
-                        <!-- TOP BAR WITHOUT BUTTON -->
-                        <HBox spacing="10" styleClass="topbar">
+                        <!-- TOP BAR -->
+                        <HBox spacing="10.0" styleClass="topbar">
                             <children>
-                                <VBox spacing="4">
+                                <VBox spacing="4.0">
                                     <children>
-                                        <Label text="Dashboard" styleClass="topbar-title"/>
-                                        <Label text="Today’s overview" styleClass="topbar-subtitle"/>
+                                        <Label
+                                                text="Dashboard"
+                                                styleClass="topbar-title"/>
+                                        <Label
+                                                text="Today’s overview"
+                                                styleClass="topbar-subtitle"/>
                                     </children>
                                 </VBox>
                             </children>
@@ -63,88 +85,132 @@
                         <!-- ROOM GRID -->
                         <VBox alignment="CENTER">
                             <children>
-                                <HBox spacing="18" styleClass="card-row">
+
+                                <!-- FIRST ROW -->
+                                <HBox spacing="18.0" styleClass="card-row">
                                     <children>
+
                                         <!-- Single -->
-                                        <VBox spacing="10" styleClass="room-card single-card">
+                                        <VBox spacing="10.0" styleClass="room-card">
                                             <children>
-                                                <Pane prefHeight="90"
-                                                      styleClass="room-hero single-hero"/>
-                                                <VBox spacing="4">
+
+                                                <Pane
+                                                        prefHeight="90.0"
+                                                        styleClass="room-hero single-hero"/>
+
+                                                <VBox spacing="4.0">
                                                     <children>
-                                                        <Label text="Single Room" styleClass="room-title"/>
-                                                        <Label text="1 guest • from $80/night"
-                                                               styleClass="room-subtitle"/>
+                                                        <Label
+                                                                text="Single Room"
+                                                                styleClass="room-title"/>
+                                                        <Label
+                                                                text="1 guest • from $80/night"
+                                                                styleClass="room-subtitle"/>
                                                     </children>
                                                 </VBox>
-                                                <MFXButton text="View / Reserve"
-                                                           styleClass="room-button"/>
+
+                                                <MFXButton
+                                                        text="View / Reserve"
+                                                        styleClass="room-button"/>
+
                                             </children>
                                         </VBox>
 
                                         <!-- Double -->
-                                        <VBox spacing="10" styleClass="room-card double-card">
+                                        <VBox spacing="10.0" styleClass="room-card">
                                             <children>
-                                                <Pane prefHeight="90"
-                                                      styleClass="room-hero double-hero"/>
-                                                <VBox spacing="4">
+
+                                                <Pane
+                                                        prefHeight="90.0"
+                                                        styleClass="room-hero double-hero"/>
+
+                                                <VBox spacing="4.0">
                                                     <children>
-                                                        <Label text="Double Room" styleClass="room-title"/>
-                                                        <Label text="2 guests • from $120/night"
-                                                               styleClass="room-subtitle"/>
+                                                        <Label
+                                                                text="Double Room"
+                                                                styleClass="room-title"/>
+                                                        <Label
+                                                                text="2 guests • from $120/night"
+                                                                styleClass="room-subtitle"/>
                                                     </children>
                                                 </VBox>
-                                                <MFXButton text="View / Reserve"
-                                                           styleClass="room-button"/>
+
+                                                <MFXButton
+                                                        text="View / Reserve"
+                                                        styleClass="room-button"/>
+
                                             </children>
                                         </VBox>
+
                                     </children>
                                 </HBox>
 
-                                <HBox spacing="18" styleClass="card-row">
+                                <!-- SECOND ROW -->
+                                <HBox spacing="18.0" styleClass="card-row">
                                     <children>
+
                                         <!-- Suite -->
-                                        <VBox spacing="10" styleClass="room-card suite-card">
+                                        <VBox spacing="10.0" styleClass="room-card">
                                             <children>
-                                                <Pane prefHeight="90"
-                                                      styleClass="room-hero suite-hero"/>
-                                                <VBox spacing="4">
+
+                                                <Pane
+                                                        prefHeight="90.0"
+                                                        styleClass="room-hero suite-hero"/>
+
+                                                <VBox spacing="4.0">
                                                     <children>
-                                                        <Label text="Suite" styleClass="room-title"/>
-                                                        <Label text="Up to 4 • from $220/night"
-                                                               styleClass="room-subtitle"/>
+                                                        <Label
+                                                                text="Suite"
+                                                                styleClass="room-title"/>
+                                                        <Label
+                                                                text="Up to 4 • from $220/night"
+                                                                styleClass="room-subtitle"/>
                                                     </children>
                                                 </VBox>
-                                                <MFXButton text="View / Reserve"
-                                                           styleClass="room-button"/>
+
+                                                <MFXButton
+                                                        text="View / Reserve"
+                                                        styleClass="room-button"/>
+
                                             </children>
                                         </VBox>
 
                                         <!-- Family -->
-                                        <VBox spacing="10" styleClass="room-card family-card">
+                                        <VBox spacing="10.0" styleClass="room-card">
                                             <children>
-                                                <Pane prefHeight="90"
-                                                      styleClass="room-hero family-hero"/>
-                                                <VBox spacing="4">
+
+                                                <Pane
+                                                        prefHeight="90.0"
+                                                        styleClass="room-hero family-hero"/>
+
+                                                <VBox spacing="4.0">
                                                     <children>
-                                                        <Label text="Family Room" styleClass="room-title"/>
-                                                        <Label text="Up to 4 • from $180/night"
-                                                               styleClass="room-subtitle"/>
+                                                        <Label
+                                                                text="Family Room"
+                                                                styleClass="room-title"/>
+                                                        <Label
+                                                                text="Up to 4 • from $180/night"
+                                                                styleClass="room-subtitle"/>
                                                     </children>
                                                 </VBox>
-                                                <MFXButton text="View / Reserve"
-                                                           styleClass="room-button"/>
+
+                                                <MFXButton
+                                                        text="View / Reserve"
+                                                        styleClass="room-button"/>
+
                                             </children>
                                         </VBox>
+
                                     </children>
                                 </HBox>
+
                             </children>
                         </VBox>
 
                     </children>
-
+                    <!-- push cards a bit to the right -->
                     <padding>
-                        <Insets top="18" right="24" bottom="24" left="0"/>
+                        <Insets top="18.0" right="24.0" bottom="24.0" left="40.0"/>
                     </padding>
                 </VBox>
             </center>
