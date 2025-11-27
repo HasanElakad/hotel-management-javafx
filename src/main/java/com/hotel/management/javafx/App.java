@@ -1,7 +1,6 @@
 package com.hotel.management.javafx;
 
 import javafx.application.Application;
-import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,7 +12,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = loadFXML("");          // login.fxml is first
+        Parent root = loadFXML("login");          // login.fxml is first
         scene = new Scene(root, 640, 480);       // size for both screens
         scene.getStylesheets().add(
                 App.class.getResource("styles.css").toExternalForm()
