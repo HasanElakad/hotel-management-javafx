@@ -46,7 +46,8 @@
 
                         <MFXButton
                                 text="Logout"
-                                styleClass="sidebar-logout-btn"/>
+                                styleClass="sidebar-logout-btn"
+                        onAction="#logout"/>
 
                         <Label
                                 text="Signed in as Admin"
