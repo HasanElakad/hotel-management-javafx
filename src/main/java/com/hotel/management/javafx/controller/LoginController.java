@@ -1,5 +1,6 @@
 package com.hotel.management.javafx.controller;
 
+import com.hotel.management.javafx.App;
 import com.hotel.management.javafx.db.UserDAO;
 import com.hotel.management.javafx.model.User;
 import javafx.fxml.FXML;
@@ -33,8 +34,13 @@ public class LoginController {
         User user = userDAO.findByCredentials(username, password);
 
         if (user != null) {
-            errorLabel.setText("Login successful! Role: " + user.getRole());
-            // TODO: App.setRoot("dashboard");
+            errorLabel.setText("");
+            try {
+                App.setRoot("dashboard");   // loads dashboard.fxml
+            } catch (Exception e) {
+                e.printStackTrace();
+                errorLabel.setText("Failed to open dashboard");
+            }
         } else {
             errorLabel.setText("Invalid username or password");
         }
