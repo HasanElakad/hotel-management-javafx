@@ -1,3 +1,4 @@
 # ignore local DB config
 src/main/resources/com/hotel/management/javafx/database.properties
 
+target/classes/com/hotel/management/javafx/database.properties
