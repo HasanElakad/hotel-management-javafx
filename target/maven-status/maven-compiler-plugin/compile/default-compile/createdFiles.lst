@@ -1,6 +1,7 @@
 com/hotel/management/javafx/App.class
-com/hotel/management/javafx/db/UserDAO.class
 com/hotel/management/javafx/db/DatabaseConnection.class
 com/hotel/management/javafx/model/User.class
 com/hotel/management/javafx/controller/DashboardController.class
 com/hotel/management/javafx/controller/LoginController.class
+com/hotel/management/javafx/controller/RoomReservationController.class
+com/hotel/management/javafx/db/UserDAO.class
