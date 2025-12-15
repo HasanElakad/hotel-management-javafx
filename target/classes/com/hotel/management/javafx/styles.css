@@ -218,3 +218,223 @@
 .room-button:hover {
     -fx-background-color: linear-gradient(to right, #2563eb, #1d4ed8);
 }
+
+
+/* RESERVATION VIEW - NO SIDEBAR */
+.reservation-container {
+    -fx-background-color: transparent;
+}
+
+/* HEADER BAR */
+.header-bar {
+    -fx-background-color: rgba(2, 6, 23, 0.95);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 12, 0.3, 0, 4);
+}
+
+.brand-label {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 10 0 0;
+}
+
+/* BACK BUTTON */
+.back-button {
+    -fx-background-color: rgba(59,130,246,0.20);
+    -fx-text-fill: #60a5fa;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 10;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.2), 8, 0.2, 0, 2);
+}
+
+.back-button:hover {
+    -fx-background-color: rgba(59,130,246,0.35);
+    -fx-text-fill: #93c5fd;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.4), 10, 0.3, 0, 2);
+}
+
+/* PAGE TITLES */
+.page-title {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.page-subtitle {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 13px;
+}
+
+/* CONTENT AREA */
+.content-area {
+    -fx-background-color: transparent;
+}
+
+/* TABLE CONTAINER */
+.table-container {
+    -fx-background-color: rgba(11, 17, 32, 0.7);
+    -fx-background-radius: 16;
+    -fx-padding: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 15, 0.2, 0, 4);
+}
+
+.section-title {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+}
+
+/* TABLE VIEW STYLING */
+.rooms-table {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 12;
+}
+
+.rooms-table .column-header-background {
+    -fx-background-color: rgba(15, 23, 42, 0.95);
+    -fx-background-radius: 12 12 0 0;
+}
+
+.rooms-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: #1f2937;
+}
+
+.rooms-table .column-header .label {
+    -fx-text-fill: #9ca3af;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-alignment: center-left;
+}
+
+.rooms-table .table-cell {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 13px;
+    -fx-alignment: center-left;
+    -fx-border-color: transparent;
+    -fx-padding: 8 10 8 10;
+}
+
+.rooms-table .table-row-cell {
+    -fx-background-color: rgba(15, 23, 42, 0.5);
+    -fx-border-color: #1f2937;
+    -fx-border-width: 0 0 1 0;
+}
+
+.rooms-table .table-row-cell:odd {
+    -fx-background-color: rgba(11, 17, 32, 0.5);
+}
+
+.rooms-table .table-row-cell:hover {
+    -fx-background-color: rgba(59, 130, 246, 0.15);
+    -fx-cursor: hand;
+}
+
+.rooms-table .table-row-cell:selected {
+    -fx-background-color: rgba(59, 130, 246, 0.35);
+    -fx-border-color: #3b82f6;
+    -fx-border-width: 2 0 2 0;
+}
+
+.rooms-table .table-row-cell:selected .table-cell {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 600;
+}
+
+/* BOOKING PANEL */
+.booking-panel {
+    -fx-background-color: rgba(15, 23, 42, 0.8);
+    -fx-background-radius: 16;
+    -fx-padding: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 15, 0.2, 0, 4);
+}
+
+.input-label {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
+.days-spinner {
+    -fx-background-color: rgba(11, 17, 32, 0.95);
+    -fx-background-radius: 10;
+}
+
+.days-spinner .text-field {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.days-spinner .increment-arrow-button,
+.days-spinner .decrement-arrow-button {
+    -fx-background-color: rgba(59, 130, 246, 0.25);
+}
+
+.days-spinner .increment-arrow-button:hover,
+.days-spinner .decrement-arrow-button:hover {
+    -fx-background-color: rgba(59, 130, 246, 0.45);
+}
+
+.price-label {
+    -fx-text-fill: #22c55e;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.book-button {
+    -fx-background-color: linear-gradient(to right, #22c55e, #16a34a);
+    -fx-text-fill: white;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 12 30 12 30;
+    -fx-effect: dropshadow(gaussian, rgba(34,197,94,0.3), 10, 0.3, 0, 2);
+}
+
+.book-button:hover {
+    -fx-background-color: linear-gradient(to right, #16a34a, #15803d);
+    -fx-effect: dropshadow(gaussian, rgba(34,197,94,0.5), 12, 0.4, 0, 3);
+}
+
+.book-button:disabled {
+    -fx-background-color: #374151;
+    -fx-text-fill: #6b7280;
+    -fx-opacity: 0.6;
+    -fx-effect: none;
+}
+
+.info-icon {
+    -fx-font-size: 14px;
+}
+
+.info-label {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 12px;
+}
+
+/* NIGHTS COUNTER */
+.counter-button {
+    -fx-background-color: rgba(59, 130, 246, 0.25);
+    -fx-text-fill: #60a5fa;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+}
+
+.counter-button:hover {
+    -fx-background-color: rgba(59, 130, 246, 0.40);
+}
+
+.nights-display {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-min-width: 50;
+    -fx-alignment: center;
+}
+
