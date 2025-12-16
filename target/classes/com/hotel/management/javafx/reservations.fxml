@@ -38,10 +38,12 @@
                                 <MFXButton
                                         fx:id="dashboardBtn"
                                         text="Dashboard"
+                                        onAction="#goDashboard"
                                         styleClass="sidebar-btn"/>
                                 <MFXButton
                                         fx:id="reservationsBtn"
                                         text="Reservations"
+                                        onAction="#goReservations"
                                         styleClass="sidebar-btn sidebar-btn-active"/>
                             </children>
                         </VBox>
@@ -51,6 +53,7 @@
                         <MFXButton
                                 fx:id="logoutBtn"
                                 text="Logout"
+                                onAction="#logout"
                                 styleClass="sidebar-logout-btn"/>
 
                         <Label
@@ -134,7 +137,13 @@
                         <!-- RESERVATIONS TABLE -->
                         <VBox spacing="14.0" styleClass="table-container" VBox.vgrow="ALWAYS">
                             <children>
-                                <Label text="All Reservations" styleClass="section-title"/>
+                                <HBox spacing="12.0" alignment="CENTER_LEFT">
+                                    <Label text="All Reservations" styleClass="section-title"/>
+                                    <MFXButton 
+                                        text="🔄 Refresh" 
+                                        onAction="#refreshData"
+                                        styleClass="room-button"/>
+                                </HBox>
 
                                 <TableView fx:id="reservationsTable" styleClass="reservations-table" VBox.vgrow="ALWAYS">
                                     <columns>
