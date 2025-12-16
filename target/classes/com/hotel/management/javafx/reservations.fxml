@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+
+<AnchorPane
+        xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="com.hotel.management.javafx.controller.ReservationsController"
+        styleClass="dashboard-root login-bg">
+
+    <children>
+        <BorderPane
+                AnchorPane.topAnchor="0.0"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0">
+
+            <!-- LEFT SIDEBAR (EXACT SAME AS DASHBOARD) -->
+            <left>
+                <VBox spacing="20.0" styleClass="sidebar">
+                    <children>
+
+                        <Label
+                                text="HotelDesk"
+                                styleClass="sidebar-title"/>
+
+                        <VBox spacing="6.0" styleClass="sidebar-menu">
+                            <children>
+                                <MFXButton
+                                        fx:id="dashboardBtn"
+                                        text="Dashboard"
+                                        styleClass="sidebar-btn"/>
+                                <MFXButton
+                                        fx:id="reservationsBtn"
+                                        text="Reservations"
+                                        styleClass="sidebar-btn sidebar-btn-active"/>
+                            </children>
+                        </VBox>
+
+                        <Pane VBox.vgrow="ALWAYS"/>
+
+                        <MFXButton
+                                fx:id="logoutBtn"
+                                text="Logout"
+                                styleClass="sidebar-logout-btn"/>
+
+                        <Label
+                                fx:id="userNameLabel"
+                                text="Signed in as Admin"
+                                styleClass="sidebar-footer"/>
+
+                    </children>
+                    <padding>
+                        <Insets top="20.0" right="16.0" bottom="20.0" left="20.0"/>
+                    </padding>
+                </VBox>
+            </left>
+
+            <!-- CENTER: RESERVATIONS CONTENT -->
+            <center>
+                <VBox spacing="18.0" styleClass="main-area">
+                    <children>
+
+                        <!-- TOP BAR -->
+                        <HBox spacing="10.0" styleClass="topbar">
+                            <children>
+                                <VBox spacing="4.0">
+                                    <children>
+                                        <Label
+                                                text="Reservations Management"
+                                                styleClass="topbar-title"/>
+                                        <Label
+                                                text="View, manage and update all reservations"
+                                                styleClass="topbar-subtitle"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <!-- STATS CARDS ROW -->
+                        <HBox spacing="18.0" alignment="CENTER_LEFT">
+                            <children>
+                                <VBox spacing="8.0" styleClass="stat-card" prefWidth="200">
+                                    <padding>
+                                        <Insets top="16.0" right="16.0" bottom="16.0" left="16.0"/>
+                                    </padding>
+                                    <children>
+                                        <Label text="Total Reservations" styleClass="stat-label"/>
+                                        <Label fx:id="totalReservationsLabel" text="0" styleClass="stat-value"/>
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="8.0" styleClass="stat-card" prefWidth="200">
+                                    <padding>
+                                        <Insets top="16.0" right="16.0" bottom="16.0" left="16.0"/>
+                                    </padding>
+                                    <children>
+                                        <Label text="Active" styleClass="stat-label"/>
+                                        <Label fx:id="activeReservationsLabel" text="0" styleClass="stat-value-success"/>
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="8.0" styleClass="stat-card" prefWidth="200">
+                                    <padding>
+                                        <Insets top="16.0" right="16.0" bottom="16.0" left="16.0"/>
+                                    </padding>
+                                    <children>
+                                        <Label text="Checked Out" styleClass="stat-label"/>
+                                        <Label fx:id="checkedOutLabel" text="0" styleClass="stat-value-info"/>
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="8.0" styleClass="stat-card" prefWidth="200">
+                                    <padding>
+                                        <Insets top="16.0" right="16.0" bottom="16.0" left="16.0"/>
+                                    </padding>
+                                    <children>
+                                        <Label text="Cancelled" styleClass="stat-label"/>
+                                        <Label fx:id="cancelledLabel" text="0" styleClass="stat-value-danger"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <!-- RESERVATIONS TABLE -->
+                        <VBox spacing="14.0" styleClass="table-container" VBox.vgrow="ALWAYS">
+                            <children>
+                                <Label text="All Reservations" styleClass="section-title"/>
+
+                                <TableView fx:id="reservationsTable" styleClass="reservations-table" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="reservationIdColumn" text="ID" prefWidth="60"/>
+                                        <TableColumn fx:id="roomIdColumn" text="Room ID" prefWidth="80"/>
+                                        <TableColumn fx:id="guestNameColumn" text="Guest Name" prefWidth="150"/>
+                                        <TableColumn fx:id="guestPhoneColumn" text="Phone" prefWidth="120"/>
+                                        <TableColumn fx:id="checkInColumn" text="Check-In" prefWidth="100"/>
+                                        <TableColumn fx:id="checkOutColumn" text="Check-Out" prefWidth="100"/>
+                                        <TableColumn fx:id="totalPriceColumn" text="Total Price" prefWidth="100"/>
+                                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+                                        <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="200"/>
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
+
+                    </children>
+                    <padding>
+                        <Insets top="18.0" right="24.0" bottom="24.0" left="40.0"/>
+                    </padding>
+                </VBox>
+            </center>
+
+        </BorderPane>
+    </children>
+</AnchorPane>
