@@ -8,36 +8,91 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.hotel.management.javafx.controller.RoomReservationController" styleClass="dashboard-root login-bg">
-    <VBox spacing="24.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+<AnchorPane xmlns="http://javafx.com/javafx" 
+            xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="com.hotel.management.javafx.controller.RoomReservationController" 
+            styleClass="dashboard-root login-bg">
+    
+    <VBox spacing="24.0" 
+          AnchorPane.topAnchor="0.0" 
+          AnchorPane.bottomAnchor="0.0" 
+          AnchorPane.leftAnchor="0.0" 
+          AnchorPane.rightAnchor="0.0">
+        
+        <!-- HEADER BAR -->
         <HBox spacing="16.0" styleClass="header-bar" alignment="CENTER_LEFT">
             <padding>
                 <Insets top="20.0" right="40.0" bottom="20.0" left="40.0"/>
             </padding>
-            <Button text="Back" styleClass="back-button"/>
+            
+            <MFXButton 
+                fx:id="backButton"
+                text="← Back to Dashboard" 
+                onAction="#handleBack"
+                styleClass="back-button"/>
+            
             <VBox spacing="4.0" HBox.hgrow="ALWAYS">
-                <Label fx:id="roomTypeLabel" text="Room Reservation" styleClass="page-title"/>
-                <Label text="Select a room to reserve" styleClass="page-subtitle"/>
+                <Label fx:id="roomTypeLabel" 
+                       text="Room Reservation" 
+                       styleClass="page-title"/>
+                <Label text="Select a room to reserve" 
+                       styleClass="page-subtitle"/>
             </VBox>
+            
             <Label text="HotelDesk" styleClass="brand-label"/>
         </HBox>
+        
+        <!-- CONTENT AREA -->
         <VBox spacing="18.0" VBox.vgrow="ALWAYS">
             <padding>
                 <Insets top="0.0" right="40.0" bottom="30.0" left="40.0"/>
             </padding>
-            <VBox spacing="14.0" styleClass="table-container">
-                <Label text="Available Rooms" styleClass="section-title"/>
-                <TableView fx:id="roomsTable" styleClass="rooms-table" prefHeight="350">
-                    <columns>
-                        <TableColumn fx:id="roomNumberColumn" text="Room Number" prefWidth="150"/>
-                        <TableColumn fx:id="roomTypeColumn" text="Room Type" prefWidth="150"/>
-                        <TableColumn fx:id="basePriceColumn" text="Price" prefWidth="120"/>
-                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="120"/>
-                    </columns>
-                </TableView>
+            
+            <!-- TABLE CONTAINER -->
+            <VBox spacing="14.0" styleClass="table-container" VBox.vgrow="ALWAYS">
+                <children>
+                    <HBox spacing="12.0" alignment="CENTER_LEFT">
+                        <Label text="Available Rooms" styleClass="section-title"/>
+                        <MFXButton 
+                            text="🔄 Refresh" 
+                            onAction="#handleRefresh"
+                            styleClass="room-button"/>
+                    </HBox>
+                    
+                    <TableView fx:id="roomsTable" 
+                              styleClass="rooms-table" 
+                              VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="roomNumberColumn" 
+                                        text="Room Number" 
+                                        prefWidth="150"/>
+                            <TableColumn fx:id="roomTypeColumn" 
+                                        text="Room Type" 
+                                        prefWidth="150"/>
+                            <TableColumn fx:id="basePriceColumn" 
+                                        text="Price per Night" 
+                                        prefWidth="150"/>
+                            <TableColumn fx:id="statusColumn" 
+                                        text="Status" 
+                                        prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                    
+                    <!-- ACTION BUTTONS -->
+                    <HBox spacing="12.0" alignment="CENTER_RIGHT">
+                        <MFXButton 
+                            text="Reserve Selected Room" 
+                            onAction="#handleReserveRoom"
+                            styleClass="book-button"/>
+                    </HBox>
+                </children>
             </VBox>
-            <Label text="Booking panel coming soon" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+            
+            <!-- INFO NOTE -->
+            <Label text="💡 Tip: Select a room from the table and click 'Reserve Selected Room' to proceed with booking" 
+                   styleClass="info-label"/>
         </VBox>
     </VBox>
 </AnchorPane>

@@ -34,10 +34,14 @@
                         <VBox spacing="6.0" styleClass="sidebar-menu">
                             <children>
                                 <MFXButton
+                                        fx:id="dashboardBtn"
                                         text="Dashboard"
+                                        onAction="#goDashboard"
                                         styleClass="sidebar-btn sidebar-btn-active"/>
                                 <MFXButton
+                                        fx:id="reservationsBtn"
                                         text="Reservations"
+                                        onAction="#goReservations"
                                         styleClass="sidebar-btn"/>
                             </children>
                         </VBox>
@@ -45,11 +49,13 @@
                         <Pane VBox.vgrow="ALWAYS"/>
 
                         <MFXButton
+                                fx:id="logoutBtn"
                                 text="Logout"
                                 styleClass="sidebar-logout-btn"
-                        onAction="#logout"/>
+                                onAction="#logout"/>
 
                         <Label
+                                fx:id="signedInLabel"
                                 text="Signed in as Admin"
                                 styleClass="sidebar-footer"/>
 
@@ -76,7 +82,7 @@
                                                 text="Dashboard"
                                                 styleClass="topbar-title"/>
                                         <Label
-                                                text="Today’s overview"
+                                                text="Today's overview"
                                                 styleClass="topbar-subtitle"/>
                                     </children>
                                 </VBox>
@@ -112,6 +118,7 @@
 
                                                 <MFXButton
                                                         text="View / Reserve"
+                                                        onAction="#viewSingleRooms"
                                                         styleClass="room-button"/>
 
                                             </children>
@@ -138,6 +145,7 @@
 
                                                 <MFXButton
                                                         text="View / Reserve"
+                                                        onAction="#viewDoubleRooms"
                                                         styleClass="room-button"/>
 
                                             </children>
@@ -171,12 +179,13 @@
 
                                                 <MFXButton
                                                         text="View / Reserve"
+                                                        onAction="#viewSuiteRooms"
                                                         styleClass="room-button"/>
 
                                             </children>
                                         </VBox>
 
-                                        <!-- Family -->
+                                        <!-- Triple (was Family) -->
                                         <VBox spacing="10.0" styleClass="room-card">
                                             <children>
 
@@ -187,16 +196,17 @@
                                                 <VBox spacing="4.0">
                                                     <children>
                                                         <Label
-                                                                text="Family Room"
+                                                                text="Triple Room"
                                                                 styleClass="room-title"/>
                                                         <Label
-                                                                text="Up to 4 • from $180/night"
+                                                                text="Up to 3 • from $150/night"
                                                                 styleClass="room-subtitle"/>
                                                     </children>
                                                 </VBox>
 
                                                 <MFXButton
                                                         text="View / Reserve"
+                                                        onAction="#viewTripleRooms"
                                                         styleClass="room-button"/>
 
                                             </children>
