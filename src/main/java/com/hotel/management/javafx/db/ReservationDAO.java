@@ -99,7 +99,7 @@ public class ReservationDAO {
      * Add a new reservation to the database
      */
     public boolean addReservation(Reservation reservation) {
-        String sql = "INSERT INTO reservations (reservation_id, guest_ssn, guest_name, guest_phone, guest_email, room_id, check_in, check_out, total_price, status, is_paid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO reservations (guest_ssn, guest_name, guest_phone, guest_email, room_id, check_in, check_out, total_price, status, is_paid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) {
@@ -109,23 +109,30 @@ public class ReservationDAO {
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             Guest guest = reservation.getGuest();
             
-            stmt.setString(1, reservation.getReservationId());
-            stmt.setString(2, guest.getSsn());
-            stmt.setString(3, guest.getName());
-            stmt.setString(4, guest.getPhoneNumber());
-            stmt.setString(5, guest.getEmail());
-            stmt.setString(6, reservation.getRoom().getRoomNumber());
-            stmt.setDate(7, Date.valueOf(reservation.getCheckInDate()));
-            stmt.setDate(8, Date.valueOf(reservation.getCheckOutDate()));
-            stmt.setDouble(9, reservation.getTotalPrice());
-            stmt.setString(10, reservation.getRoom().getStatus());
-            stmt.setBoolean(11, reservation.isPaid());
-            
-            int rowsAffected = stmt.executeUpdate();
-            
+//            stmt.setString(1, reservation.getReservationId());
+            stmt.setString(1, guest.getSsn());
+            stmt.setString(2, guest.getName());
+            stmt.setString(3, guest.getPhoneNumber());
+            stmt.setString(4, guest.getEmail());
+            stmt.setString(5, reservation.getRoom().getRoomNumber());
+            stmt.setDate(6, Date.valueOf(reservation.getCheckInDate()));
+            stmt.setDate(7, Date.valueOf(reservation.getCheckOutDate()));
+            stmt.setDouble(8, reservation.getTotalPrice());
+            stmt.setString(9, reservation.getRoom().getStatus());
+            stmt.setBoolean(10, reservation.isPaid());
+            System.out.println("Executing Query: " + stmt.toString());
+
+            int rowsAffected = stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             // Update room status to Reserved
             if (rowsAffected > 0) {
                 roomDAO.updateRoomStatus(reservation.getRoom().getRoomNumber(), "Reserved");
+            // Retrieve the generated keys
+            try (java.sql.ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    String newId = generatedKeys.getString(1);
+                    reservation.setReservationId(newId);
+                }
+            }
             }
             
             return rowsAffected > 0;
