@@ -234,19 +234,38 @@ public class RoomReservationController {
     Optional<ButtonType> result = dialog.showAndWait();
 
     if (result.isPresent() && result.get() == loginButtonType) {
-        // Validation
-        if (nameField.getText().isEmpty() || ssnField.getText().isEmpty() || checkInDate.getValue() == null || checkOutDate.getValue() == null) {
-            showInfo("Error", "Please fill in all fields.");
+    // Basic empty checks
+    if (nameField.getText().isEmpty() ||
+        ssnField.getText().isEmpty() ||
+        checkInDate.getValue() == null ||
+        checkOutDate.getValue() == null) {
+        showInfo("Error", "Please fill in all required fields.");
+        return;
+    }
+
+    // Extra SSN validation to match Guest rules
+    String ssn = ssnField.getText().trim();
+    if (ssn.length() < 14) {
+        showInfo("Invalid SSN", "SSN must be at least 14 characters.");
+        return;
+    }
+
+    // Optional: phone / email checks before constructing Guest
+
+    try {
+        Guest guest = new Guest(
+            ssn,
+            nameField.getText().trim(),
+            phoneField.getText().trim(),
+            emailField.getText().trim()
+        );
+
+        long days = ChronoUnit.DAYS.between(checkInDate.getValue(), checkOutDate.getValue());
+        if (days <= 0) {
+            showInfo("Invalid dates", "Check-out must be after check-in.");
             return;
         }
-        
-        // Calculate final total price
-        long days = ChronoUnit.DAYS.between(checkInDate.getValue(), checkOutDate.getValue());
-        double finalTotal = (days > 0) ? days * room.getPrice() : room.getPrice();
-
-        Guest guest = new Guest(ssnField.getText(),
-                nameField.getText(), phoneField.getText(),emailField.getText());
-        UUID uuid = UUID.randomUUID();
+        double finalTotal = days * room.getPrice();
 
         Reservation reservation = new Reservation(
             "",
@@ -255,8 +274,15 @@ public class RoomReservationController {
             checkInDate.getValue(),
             checkOutDate.getValue()
         );
-        this.reservationDAO.addReservation(reservation);
+
+        reservationDAO.addReservation(reservation);
+
+    } catch (IllegalArgumentException ex) {
+        // Catch any validation coming from Guest / Reservation
+        showInfo("Validation error", ex.getMessage());
     }
+}
+
 }
 
 
