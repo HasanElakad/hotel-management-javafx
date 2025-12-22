@@ -1,14 +1,20 @@
 package com.hotel.management.javafx.controller;
 
+import java.util.UUID;
 import com.hotel.management.javafx.App;
 import com.hotel.management.javafx.db.RoomDAO;
+import com.hotel.management.javafx.db.ReservationDAO;
 import com.hotel.management.javafx.model.Room;
+import com.hotel.management.javafx.model.Reservation;
+import com.hotel.management.javafx.model.Guest;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-
+import javafx.scene.layout.GridPane;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.List;
 
 public class RoomReservationController {
@@ -22,12 +28,14 @@ public class RoomReservationController {
     @FXML private Button backButton;
     
     private RoomDAO roomDAO;
+    private ReservationDAO reservationDAO;
     private ObservableList<Room> roomsList;
     private String selectedRoomType;
     
     @FXML
     public void initialize() {
         roomDAO = new RoomDAO();
+        reservationDAO = new ReservationDAO();
         roomsList = FXCollections.observableArrayList();
         
         setupTableColumns();
@@ -139,27 +147,119 @@ public class RoomReservationController {
     
     @FXML
     private void handleReserveRoom() {
-        Room selectedRoom = roomsTable.getSelectionModel().getSelectedItem();
-        
-        if (selectedRoom == null) {
-            showInfo("No Selection", "Please select a room to reserve.");
-            return;
-        }
-        
-        if (!selectedRoom.isAvailable()) {
-            showInfo("Room Unavailable", "This room is not available for reservation. Status: " + selectedRoom.getStatus());
-            return;
-        }
-        
-        // TODO: Open reservation dialog/form
-        showInfo("Reservation", "Reservation form for room " + selectedRoom.getRoomNumber() + " will be implemented here.\n\n" +
-                "Room Details:\n" +
-                "Type: " + selectedRoom.getRoomType() + "\n" +
-                "Capacity: " + selectedRoom.getCapacity() + " guests\n" +
-                "Price: $" + String.format("%.2f", selectedRoom.getPrice()) + "/night\n" +
-                "Floor: " + selectedRoom.getFloor());
+    Room selectedRoom = roomsTable.getSelectionModel().getSelectedItem();
+
+    if (selectedRoom == null) {
+        showInfo("No Selection", "Please select a room to reserve.");
+        return;
     }
-    
+
+    if (!selectedRoom.isAvailable()) {
+        showInfo("Room Unavailable", "This room is not available. Status: " + selectedRoom.getStatus());
+        return;
+    }
+
+    // Open the Reservation Form Dialog
+    showReservationDialog(selectedRoom);
+}
+    @FXML
+    private void showReservationDialog(Room room) {
+    // 1. Create the Dialog
+    Dialog<ButtonType> dialog = new Dialog<>();
+    dialog.setTitle("New Reservation");
+    dialog.setHeaderText("Reserve Room " + room.getRoomNumber() + " (" + room.getRoomType() + ")");
+
+    // 2. Set the buttons (Save and Cancel)
+    ButtonType loginButtonType = new ButtonType("Confirm Reservation", ButtonBar.ButtonData.OK_DONE);
+    dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+    // 3. Create the Form Layout
+    GridPane grid = new GridPane();
+    grid.setHgap(10);
+    grid.setVgap(10);
+    // grid.setPadding(new Insets(20, 150, 10, 10)); // Add padding import if needed
+
+    // 4. Create UI Controls
+    TextField ssnField = new TextField();
+    ssnField.setPromptText("Guest SSN (Min 14 chars)");
+
+    TextField nameField = new TextField();
+    nameField.setPromptText("Full Name");
+
+    TextField phoneField = new TextField();
+    phoneField.setPromptText("Phone Number");
+
+    TextField emailField = new TextField();
+    emailField.setPromptText("Email Address");
+
+    DatePicker checkInDate = new DatePicker();
+    DatePicker checkOutDate = new DatePicker();
+
+    Label totalPriceLabel = new Label("$" + room.getPrice()); // Default to base price
+
+    // 5. Add controls to Grid
+    grid.add(new Label("Guest SSN:"), 0, 0);
+    grid.add(ssnField, 1, 0);
+    grid.add(new Label("Guest Name:"), 0, 1);
+    grid.add(nameField, 1, 1);
+    grid.add(new Label("Phone:"), 0, 2);
+    grid.add(phoneField, 1, 2);
+    grid.add(new Label("Email:"), 0, 3);
+    grid.add(emailField, 1, 3);
+    grid.add(new Label("Check-In:"), 0, 4);
+    grid.add(checkInDate, 1, 4);
+    grid.add(new Label("Check-Out:"), 0, 5);
+    grid.add(checkOutDate, 1, 5);
+    grid.add(new Label("Total Price:"), 0, 6);
+    grid.add(totalPriceLabel, 1, 6);
+
+    dialog.getDialogPane().setContent(grid);
+
+    // --- LOGIC: Auto-calculate Total Price when dates change ---
+    Runnable updatePrice = () -> {
+        if (checkInDate.getValue() != null && checkOutDate.getValue() != null) {
+            long days = ChronoUnit.DAYS.between(checkInDate.getValue(), checkOutDate.getValue());
+            if (days > 0) {
+                double total = days * room.getPrice();
+                totalPriceLabel.setText("$" + String.format("%.2f", total));
+            } else {
+                totalPriceLabel.setText("Invalid Dates");
+            }
+        }
+    };
+    checkInDate.valueProperty().addListener((obs, oldVal, newVal) -> updatePrice.run());
+    checkOutDate.valueProperty().addListener((obs, oldVal, newVal) -> updatePrice.run());
+
+    // 6. Show Dialog and wait for result
+    Optional<ButtonType> result = dialog.showAndWait();
+
+    if (result.isPresent() && result.get() == loginButtonType) {
+        // Validation
+        if (nameField.getText().isEmpty() || ssnField.getText().isEmpty() || checkInDate.getValue() == null || checkOutDate.getValue() == null) {
+            showInfo("Error", "Please fill in all fields.");
+            return;
+        }
+        
+        // Calculate final total price
+        long days = ChronoUnit.DAYS.between(checkInDate.getValue(), checkOutDate.getValue());
+        double finalTotal = (days > 0) ? days * room.getPrice() : room.getPrice();
+
+        Guest guest = new Guest(ssnField.getText(),
+                nameField.getText(), phoneField.getText(),emailField.getText());
+        UUID uuid = UUID.randomUUID();
+
+        Reservation reservation = new Reservation(
+            "",
+            guest,
+            room,
+            checkInDate.getValue(),
+            checkOutDate.getValue()
+        );
+        this.reservationDAO.addReservation(reservation);
+    }
+}
+
+
     @FXML
     private void handleRefresh() {
         if (selectedRoomType != null) {
