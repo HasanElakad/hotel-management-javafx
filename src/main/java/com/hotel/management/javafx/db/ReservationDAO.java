@@ -1,115 +1,24 @@
 package com.hotel.management.javafx.db;
 
-import com.hotel.management.javafx.model.Guest;
-import com.hotel.management.javafx.model.Reservation;
-import com.hotel.management.javafx.model.Room;
+import com.hotel.management.javafx.model.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationDAO {
+    private static RoomDAO roomDAO = new RoomDAO();
     
-    private RoomDAO roomDAO = new RoomDAO();
-    
-    /**
-     * Get all reservations from the database
-     */
-    public List<Reservation> getAllReservations() {
-        List<Reservation> reservations = new ArrayList<>();
-        String sql = "SELECT * FROM reservations";
-        
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) {
-            System.err.println("Database connection failed");
-            return reservations;
-        }
-        
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            
-            while (rs.next()) {
-                Reservation reservation = createReservationFromResultSet(rs);
-                if (reservation != null) {
-                    reservations.add(reservation);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        
-        return reservations;
-    }
-    
-    /**
-     * Get reservations by status
-     */
-    public List<Reservation> getReservationsByStatus(String status) {
-        List<Reservation> reservations = new ArrayList<>();
-        String sql = "SELECT * FROM reservations WHERE status = ?";
-        
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) {
-            return reservations;
-        }
-        
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, status);
-            ResultSet rs = stmt.executeQuery();
-            
-            while (rs.next()) {
-                Reservation reservation = createReservationFromResultSet(rs);
-                if (reservation != null) {
-                    reservations.add(reservation);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        
-        return reservations;
-    }
-    
-    /**
-     * Get a specific reservation by ID
-     */
-    public Reservation getReservationById(String reservationId) {
-        String sql = "SELECT * FROM reservations WHERE reservation_id = ?";
-        
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) {
-            return null;
-        }
-        
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, reservationId);
-            ResultSet rs = stmt.executeQuery();
-            
-            if (rs.next()) {
-                return createReservationFromResultSet(rs);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        
-        return null;
-    }
-    
-    /**
-     * Add a new reservation to the database
-     */
     public boolean addReservation(Reservation reservation) {
-        String sql = "INSERT INTO reservations (guest_ssn, guest_name, guest_phone, guest_email, room_id, check_in, check_out, total_price, status, is_paid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO reservations " +
+                     "(guest_ssn, guest_name, guest_phone, guest_email, " +
+                     " room_id, check_in, check_out, total_price, status, is_paid) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) {
-            return false;
-        }
-        
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            Guest guest = reservation.getGuest();
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
-//            stmt.setString(1, reservation.getReservationId());
+            Guest guest = reservation.getGuest();
             stmt.setString(1, guest.getSsn());
             stmt.setString(2, guest.getName());
             stmt.setString(3, guest.getPhoneNumber());
@@ -118,153 +27,114 @@ public class ReservationDAO {
             stmt.setDate(6, Date.valueOf(reservation.getCheckInDate()));
             stmt.setDate(7, Date.valueOf(reservation.getCheckOutDate()));
             stmt.setDouble(8, reservation.getTotalPrice());
-            stmt.setString(9, reservation.getRoom().getStatus());
+            stmt.setString(9, reservation.getRoom().getStatus());  // Fixed: use room status
             stmt.setBoolean(10, reservation.isPaid());
-            System.out.println("Executing Query: " + stmt.toString());
-
-            int rowsAffected = stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-            // Update room status to Reserved
+            
+            int rowsAffected = stmt.executeUpdate();
+            
             if (rowsAffected > 0) {
                 roomDAO.updateRoomStatus(reservation.getRoom().getRoomNumber(), "Reserved");
-            // Retrieve the generated keys
-            try (java.sql.ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    String newId = generatedKeys.getString(1);
-                    reservation.setReservationId(newId);
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        reservation.setReservationId(rs.getString(1));
+                    }
                 }
             }
+            return rowsAffected > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public List<Reservation> getAllReservations() {
+        List<Reservation> reservations = new ArrayList<>();
+        String sql = "SELECT * FROM reservations ORDER BY check_in DESC";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            
+            while (rs.next()) {
+                Reservation res = createReservationFromResultSet(rs);
+                if (res != null) {
+                    reservations.add(res);
+                }
             }
-            
-            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reservations;
+    }
+    
+    public boolean deleteReservation(String reservationId) {
+        String sql = "DELETE FROM reservations WHERE reservation_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, reservationId);
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                String roomNumber = getRoomNumberByReservationId(reservationId);
+                if (roomNumber != null) {
+                    roomDAO.updateRoomStatus(roomNumber, "Available");
+                }
+            }
+            return rows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
     
-    /**
-     * Update reservation status
-     */
-    public boolean updateReservationStatus(String reservationId, String newStatus) {
-        String sql = "UPDATE reservations SET status = ? WHERE reservation_id = ?";
-        
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) {
-            return false;
-        }
-        
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, newStatus);
-            stmt.setString(2, reservationId);
-            
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
+    public boolean cancelReservation(String reservationId) {  // ADDED
+        return deleteReservation(reservationId);
+    }
+    
+    private String getRoomNumberByReservationId(String reservationId) {
+        String sql = "SELECT room_id FROM reservations WHERE reservation_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, reservationId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("room_id");
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return null;
     }
     
-    /**
-     * Cancel a reservation
-     */
-    public boolean cancelReservation(String reservationId) {
-        Reservation reservation = getReservationById(reservationId);
-        if (reservation == null) {
-            return false;
-        }
-        
-        // Update reservation status to Cancelled
-        boolean updated = updateReservationStatus(reservationId, "Cancelled");
-        
-        // Update room status to Available
-        if (updated) {
-            roomDAO.updateRoomStatus(reservation.getRoom().getRoomNumber(), "Available");
-        }
-        
-        return updated;
-    }
-    
-    /**
-     * Process payment for a reservation
-     */
-    public boolean processPayment(String reservationId) {
-        String sql = "UPDATE reservations SET is_paid = true, payment_date = ? WHERE reservation_id = ?";
-        
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) {
-            return false;
-        }
-        
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setDate(1, Date.valueOf(LocalDate.now()));
-            stmt.setString(2, reservationId);
-            
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-    
-    /**
-     * Check in a guest
-     */
-    public boolean checkIn(String reservationId) {
-        Reservation reservation = getReservationById(reservationId);
-        if (reservation == null || !reservation.isPaid()) {
-            return false;
-        }
-        
-        // Update room status to Occupied
-        return roomDAO.updateRoomStatus(reservation.getRoom().getRoomNumber(), "Occupied");
-    }
-    
-    /**
-     * Check out a guest
-     */
-    public boolean checkOut(String reservationId) {
-        Reservation reservation = getReservationById(reservationId);
-        if (reservation == null) {
-            return false;
-        }
-        
-        // Update reservation status and room status
-        updateReservationStatus(reservationId, "Completed");
-        return roomDAO.updateRoomStatus(reservation.getRoom().getRoomNumber(), "Cleaning");
-    }
-    
-    /**
-     * Helper method to create Reservation object from ResultSet
-     */
     private Reservation createReservationFromResultSet(ResultSet rs) throws SQLException {
-        String reservationId = rs.getString("reservation_id");
-        String guestSsn = rs.getString("guest_ssn");
-        String guestName = rs.getString("guest_name");
-        String guestPhone = rs.getString("guest_phone");
-        String guestEmail = rs.getString("guest_email");
-        String roomId = rs.getString("room_id");
-        LocalDate checkIn = rs.getDate("check_in").toLocalDate();
-        LocalDate checkOut = rs.getDate("check_out").toLocalDate();
-        boolean isPaid = rs.getBoolean("is_paid");
-        
-        // Create Guest object
-        Guest guest = new Guest(guestSsn, guestName, guestPhone, guestEmail);
-        
-        // Get Room from RoomDAO
-        Room room = roomDAO.getRoomByNumber(roomId);
-        if (room == null) {
-            System.err.println("Room not found: " + roomId);
-            return null;
-        }
-        
-        // Create Reservation object
-        Reservation reservation = new Reservation(reservationId, guest, room, checkIn, checkOut);
-        if (isPaid) {
-            reservation.processPayment();
-        }
-        
-        return reservation;
+    String reservationId = rs.getString("reservation_id");
+    String guestSsn = rs.getString("guest_ssn");
+    String guestName = rs.getString("guest_name");
+    String guestPhone = rs.getString("guest_phone");
+    String guestEmail = rs.getString("guest_email");
+    String roomId = rs.getString("room_id");
+    
+    Room room = roomDAO.getRoomByNumber(roomId);
+    if (room == null) {
+        System.err.println("⚠️ Skipping reservation " + reservationId + " - Room not found: " + roomId);
+        return null;
     }
+    
+    LocalDate checkIn = rs.getDate("check_in").toLocalDate();
+    LocalDate checkOut = rs.getDate("check_out").toLocalDate();
+    
+    // TEMPORARILY make room available for constructor
+    String originalStatus = room.getStatus();
+    room.setStatus("Available");
+    
+    Guest guest = new Guest(guestSsn, guestName, guestPhone, guestEmail);
+    Reservation reservation = new Reservation(reservationId, guest, room, checkIn, checkOut);
+    
+    // Restore original room status
+    room.setStatus(originalStatus);
+    
+    return reservation;
+}
+
 }
