@@ -24,6 +24,20 @@ public class Reservation {
          this.isPaid = false;
         calculateTotalPrice();
     }
+    
+    // Add this constructor to Reservation.java for loading old data
+public Reservation(String reservationId, Guest guest, Room room, LocalDate checkInDate, 
+                   LocalDate checkOutDate, boolean bypassValidation) {
+    this.reservationId = reservationId;
+    this.guest = guest;
+    this.room = room;
+    this.checkInDate = checkInDate;  // Skip validation
+    this.checkOutDate = checkOutDate;
+    room.setStatus("Reserved");
+    this.isPaid = false;
+    calculateTotalPrice();
+}
+
 
     public String getReservationId() {
         return reservationId;
