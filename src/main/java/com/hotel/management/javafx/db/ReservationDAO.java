@@ -129,7 +129,8 @@ public class ReservationDAO {
     room.setStatus("Available");
     
     Guest guest = new Guest(guestSsn, guestName, guestPhone, guestEmail);
-    Reservation reservation = new Reservation(reservationId, guest, room, checkIn, checkOut);
+    Reservation reservation = new Reservation(reservationId, guest, room, checkIn, checkOut, true);
+
     
     // Restore original room status
     room.setStatus(originalStatus);
