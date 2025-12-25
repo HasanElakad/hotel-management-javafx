@@ -17,21 +17,32 @@ public class RoomDAO {
         List<Room> rooms = new ArrayList<>();
         String sql = "SELECT * FROM rooms";
         
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) {
-            System.err.println("Database connection failed");
-            return rooms;
-        }
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
         
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try {
+            conn = DatabaseConnection.getConnection();
+            if (conn == null) {
+                System.err.println("Database connection failed");
+                return rooms;
+            }
+            
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
             
             while (rs.next()) {
                 Room room = createRoomFromResultSet(rs);
                 rooms.add(room);
             }
+            
+            System.out.println("✓ Loaded " + rooms.size() + " rooms");
+            
         } catch (SQLException e) {
+            System.err.println("Error loading all rooms: " + e.getMessage());
             e.printStackTrace();
+        } finally {
+            closeResources(rs, stmt);
         }
         
         return rooms;
@@ -44,22 +55,33 @@ public class RoomDAO {
         List<Room> rooms = new ArrayList<>();
         String sql = "SELECT * FROM rooms WHERE room_type = ?";
         
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) {
-            System.err.println("Database connection failed");
-            return rooms;
-        }
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
         
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try {
+            conn = DatabaseConnection.getConnection();
+            if (conn == null) {
+                System.err.println("Database connection failed");
+                return rooms;
+            }
+            
+            stmt = conn.prepareStatement(sql);
             stmt.setString(1, roomType);
-            ResultSet rs = stmt.executeQuery();
+            rs = stmt.executeQuery();
             
             while (rs.next()) {
                 Room room = createRoomFromResultSet(rs);
                 rooms.add(room);
             }
+            
+            System.out.println("✓ Loaded " + rooms.size() + " rooms of type: " + roomType);
+            
         } catch (SQLException e) {
+            System.err.println("Error loading rooms by type '" + roomType + "': " + e.getMessage());
             e.printStackTrace();
+        } finally {
+            closeResources(rs, stmt);
         }
         
         return rooms;
@@ -72,22 +94,31 @@ public class RoomDAO {
         List<Room> rooms = new ArrayList<>();
         String sql = "SELECT * FROM rooms WHERE status = ?";
         
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) {
-            System.err.println("Database connection failed");
-            return rooms;
-        }
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
         
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try {
+            conn = DatabaseConnection.getConnection();
+            if (conn == null) {
+                System.err.println("Database connection failed");
+                return rooms;
+            }
+            
+            stmt = conn.prepareStatement(sql);
             stmt.setString(1, status);
-            ResultSet rs = stmt.executeQuery();
+            rs = stmt.executeQuery();
             
             while (rs.next()) {
                 Room room = createRoomFromResultSet(rs);
                 rooms.add(room);
             }
+            
         } catch (SQLException e) {
+            System.err.println("Error loading rooms by status: " + e.getMessage());
             e.printStackTrace();
+        } finally {
+            closeResources(rs, stmt);
         }
         
         return rooms;
@@ -106,21 +137,33 @@ public class RoomDAO {
     public Room getRoomByNumber(String roomNumber) {
         String sql = "SELECT * FROM rooms WHERE room_number = ?";
         
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) {
-            System.err.println("Database connection failed");
-            return null;
-        }
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
         
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try {
+            conn = DatabaseConnection.getConnection();
+            if (conn == null) {
+                System.err.println("Database connection failed");
+                return null;
+            }
+            
+            stmt = conn.prepareStatement(sql);
             stmt.setString(1, roomNumber);
-            ResultSet rs = stmt.executeQuery();
+            rs = stmt.executeQuery();
             
             if (rs.next()) {
-                return createRoomFromResultSet(rs);
+                Room room = createRoomFromResultSet(rs);
+                System.out.println("✓ Found room: " + roomNumber);
+                return room;
+            } else {
+                System.err.println("⚠️ Room not found: " + roomNumber);
             }
         } catch (SQLException e) {
+            System.err.println("Error getting room by number: " + e.getMessage());
             e.printStackTrace();
+        } finally {
+            closeResources(rs, stmt);
         }
         
         return null;
@@ -132,21 +175,36 @@ public class RoomDAO {
     public boolean updateRoomStatus(String roomNumber, String newStatus) {
         String sql = "UPDATE rooms SET status = ? WHERE room_number = ?";
         
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) {
-            System.err.println("Database connection failed");
-            return false;
-        }
+        Connection conn = null;
+        PreparedStatement stmt = null;
         
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try {
+            conn = DatabaseConnection.getConnection();
+            if (conn == null) {
+                System.err.println("Database connection failed");
+                return false;
+            }
+            
+            stmt = conn.prepareStatement(sql);
             stmt.setString(1, newStatus);
             stmt.setString(2, roomNumber);
             
             int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
+            
+            if (rowsAffected > 0) {
+                System.out.println("✓ Room " + roomNumber + " status updated to: " + newStatus);
+                return true;
+            } else {
+                System.err.println("⚠️ Failed to update room " + roomNumber + " - room not found");
+                return false;
+            }
+            
         } catch (SQLException e) {
+            System.err.println("Error updating room status: " + e.getMessage());
             e.printStackTrace();
             return false;
+        } finally {
+            closeResources(null, stmt);
         }
     }
     
@@ -156,13 +214,17 @@ public class RoomDAO {
     public boolean addRoom(Room room) {
         String sql = "INSERT INTO rooms (room_number, capacity, room_type, price, floor, extra_bed, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) {
-            System.err.println("Database connection failed");
-            return false;
-        }
+        Connection conn = null;
+        PreparedStatement stmt = null;
         
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try {
+            conn = DatabaseConnection.getConnection();
+            if (conn == null) {
+                System.err.println("Database connection failed");
+                return false;
+            }
+            
+            stmt = conn.prepareStatement(sql);
             stmt.setString(1, room.getRoomNumber());
             stmt.setInt(2, room.getCapacity());
             stmt.setString(3, room.getRoomType());
@@ -172,10 +234,20 @@ public class RoomDAO {
             stmt.setString(7, room.getStatus());
             
             int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
+            
+            if (rowsAffected > 0) {
+                System.out.println("✓ Room " + room.getRoomNumber() + " added successfully");
+                return true;
+            }
+            
+            return false;
+            
         } catch (SQLException e) {
+            System.err.println("Error adding room: " + e.getMessage());
             e.printStackTrace();
             return false;
+        } finally {
+            closeResources(null, stmt);
         }
     }
     
@@ -195,5 +267,18 @@ public class RoomDAO {
         room.setStatus(status);
         
         return room;
+    }
+    
+    /**
+     * Helper method to close database resources
+     */
+    private void closeResources(ResultSet rs, PreparedStatement stmt) {
+        try {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
+        } catch (SQLException e) {
+            System.err.println("Error closing resources: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

@@ -121,7 +121,8 @@ public class RoomReservationController {
     private void loadRoomsByType(String roomType) {
         try {
             List<Room> rooms = roomDAO.getRoomsByType(roomType);
-            roomsList.setAll(rooms);
+            roomsList.clear();
+            roomsList.addAll(rooms);
             roomsTable.setItems(roomsList);
             
             System.out.println("Loaded " + rooms.size() + " rooms of type: " + roomType);
@@ -147,149 +148,165 @@ public class RoomReservationController {
     
     @FXML
     private void handleReserveRoom() {
-    Room selectedRoom = roomsTable.getSelectionModel().getSelectedItem();
+        Room selectedRoom = roomsTable.getSelectionModel().getSelectedItem();
 
-    if (selectedRoom == null) {
-        showInfo("No Selection", "Please select a room to reserve.");
-        return;
-    }
-
-    if (!selectedRoom.isAvailable()) {
-        showInfo("Room Unavailable", "This room is not available. Status: " + selectedRoom.getStatus());
-        return;
-    }
-
-    // Open the Reservation Form Dialog
-    showReservationDialog(selectedRoom);
-}
-    @FXML
-    private void showReservationDialog(Room room) {
-    // 1. Create the Dialog
-    Dialog<ButtonType> dialog = new Dialog<>();
-    dialog.setTitle("New Reservation");
-    dialog.setHeaderText("Reserve Room " + room.getRoomNumber() + " (" + room.getRoomType() + ")");
-
-    // 2. Set the buttons (Save and Cancel)
-    ButtonType loginButtonType = new ButtonType("Confirm Reservation", ButtonBar.ButtonData.OK_DONE);
-    dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
-
-    // 3. Create the Form Layout
-    GridPane grid = new GridPane();
-    grid.setHgap(10);
-    grid.setVgap(10);
-    // grid.setPadding(new Insets(20, 150, 10, 10)); // Add padding import if needed
-
-    // 4. Create UI Controls
-    TextField ssnField = new TextField();
-    ssnField.setPromptText("Guest SSN (Min 14 chars)");
-
-    TextField nameField = new TextField();
-    nameField.setPromptText("Full Name");
-
-    TextField phoneField = new TextField();
-    phoneField.setPromptText("Phone Number");
-
-    TextField emailField = new TextField();
-    emailField.setPromptText("Email Address");
-
-    DatePicker checkInDate = new DatePicker();
-    DatePicker checkOutDate = new DatePicker();
-
-    Label totalPriceLabel = new Label("$" + room.getPrice()); // Default to base price
-
-    // 5. Add controls to Grid
-    grid.add(new Label("Guest SSN:"), 0, 0);
-    grid.add(ssnField, 1, 0);
-    grid.add(new Label("Guest Name:"), 0, 1);
-    grid.add(nameField, 1, 1);
-    grid.add(new Label("Phone:"), 0, 2);
-    grid.add(phoneField, 1, 2);
-    grid.add(new Label("Email:"), 0, 3);
-    grid.add(emailField, 1, 3);
-    grid.add(new Label("Check-In:"), 0, 4);
-    grid.add(checkInDate, 1, 4);
-    grid.add(new Label("Check-Out:"), 0, 5);
-    grid.add(checkOutDate, 1, 5);
-    grid.add(new Label("Total Price:"), 0, 6);
-    grid.add(totalPriceLabel, 1, 6);
-
-    dialog.getDialogPane().setContent(grid);
-
-    // --- LOGIC: Auto-calculate Total Price when dates change ---
-    Runnable updatePrice = () -> {
-        if (checkInDate.getValue() != null && checkOutDate.getValue() != null) {
-            long days = ChronoUnit.DAYS.between(checkInDate.getValue(), checkOutDate.getValue());
-            if (days > 0) {
-                double total = days * room.getPrice();
-                totalPriceLabel.setText("$" + String.format("%.2f", total));
-            } else {
-                totalPriceLabel.setText("Invalid Dates");
-            }
-        }
-    };
-    checkInDate.valueProperty().addListener((obs, oldVal, newVal) -> updatePrice.run());
-    checkOutDate.valueProperty().addListener((obs, oldVal, newVal) -> updatePrice.run());
-
-    // 6. Show Dialog and wait for result
-    Optional<ButtonType> result = dialog.showAndWait();
-
-    if (result.isPresent() && result.get() == loginButtonType) {
-    // Basic empty checks
-    if (nameField.getText().isEmpty() ||
-        ssnField.getText().isEmpty() ||
-        checkInDate.getValue() == null ||
-        checkOutDate.getValue() == null) {
-        showInfo("Error", "Please fill in all required fields.");
-        return;
-    }
-
-    // Extra SSN validation to match Guest rules
-    String ssn = ssnField.getText().trim();
-    if (ssn.length() < 14) {
-        showInfo("Invalid SSN", "SSN must be at least 14 characters.");
-        return;
-    }
-
-    // Optional: phone / email checks before constructing Guest
-
-    try {
-        Guest guest = new Guest(
-            ssn,
-            nameField.getText().trim(),
-            phoneField.getText().trim(),
-            emailField.getText().trim()
-        );
-
-        long days = ChronoUnit.DAYS.between(checkInDate.getValue(), checkOutDate.getValue());
-        if (days <= 0) {
-            showInfo("Invalid dates", "Check-out must be after check-in.");
+        if (selectedRoom == null) {
+            showInfo("No Selection", "Please select a room to reserve.");
             return;
         }
-        double finalTotal = days * room.getPrice();
 
-        Reservation reservation = new Reservation(
-            "",
-            guest,
-            room,
-            checkInDate.getValue(),
-            checkOutDate.getValue()
-        );
+        if (!selectedRoom.isAvailable()) {
+            showInfo("Room Unavailable", "This room is not available. Status: " + selectedRoom.getStatus());
+            return;
+        }
 
-        reservationDAO.addReservation(reservation);
-
-    } catch (IllegalArgumentException ex) {
-        // Catch any validation coming from Guest / Reservation
-        showInfo("Validation error", ex.getMessage());
+        // Open the Reservation Form Dialog
+        showReservationDialog(selectedRoom);
     }
-}
+    
+    private void showReservationDialog(Room room) {
+        // 1. Create the Dialog
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("New Reservation");
+        dialog.setHeaderText("Reserve Room " + room.getRoomNumber() + " (" + room.getRoomType() + ")");
 
-}
+        // 2. Set the buttons (Save and Cancel)
+        ButtonType confirmButtonType = new ButtonType("Confirm Reservation", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
 
+        // 3. Create the Form Layout
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        // 4. Create UI Controls
+        TextField ssnField = new TextField();
+        ssnField.setPromptText("Guest SSN (Min 14 chars)");
+
+        TextField nameField = new TextField();
+        nameField.setPromptText("Full Name");
+
+        TextField phoneField = new TextField();
+        phoneField.setPromptText("Phone Number");
+
+        TextField emailField = new TextField();
+        emailField.setPromptText("Email Address");
+
+        DatePicker checkInDate = new DatePicker();
+        DatePicker checkOutDate = new DatePicker();
+
+        Label totalPriceLabel = new Label("$" + room.getPrice());
+
+        // 5. Add controls to Grid
+        grid.add(new Label("Guest SSN:"), 0, 0);
+        grid.add(ssnField, 1, 0);
+        grid.add(new Label("Guest Name:"), 0, 1);
+        grid.add(nameField, 1, 1);
+        grid.add(new Label("Phone:"), 0, 2);
+        grid.add(phoneField, 1, 2);
+        grid.add(new Label("Email:"), 0, 3);
+        grid.add(emailField, 1, 3);
+        grid.add(new Label("Check-In:"), 0, 4);
+        grid.add(checkInDate, 1, 4);
+        grid.add(new Label("Check-Out:"), 0, 5);
+        grid.add(checkOutDate, 1, 5);
+        grid.add(new Label("Total Price:"), 0, 6);
+        grid.add(totalPriceLabel, 1, 6);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // --- LOGIC: Auto-calculate Total Price when dates change ---
+        Runnable updatePrice = () -> {
+            if (checkInDate.getValue() != null && checkOutDate.getValue() != null) {
+                long days = ChronoUnit.DAYS.between(checkInDate.getValue(), checkOutDate.getValue());
+                if (days > 0) {
+                    double total = days * room.getPrice();
+                    totalPriceLabel.setText("$" + String.format("%.2f", total));
+                } else {
+                    totalPriceLabel.setText("Invalid Dates");
+                }
+            }
+        };
+        checkInDate.valueProperty().addListener((obs, oldVal, newVal) -> updatePrice.run());
+        checkOutDate.valueProperty().addListener((obs, oldVal, newVal) -> updatePrice.run());
+
+        // 6. Show Dialog and wait for result
+        Optional<ButtonType> result = dialog.showAndWait();
+
+        if (result.isPresent() && result.get() == confirmButtonType) {
+            // Validate all fields
+            if (nameField.getText().trim().isEmpty() ||
+                ssnField.getText().trim().isEmpty() ||
+                phoneField.getText().trim().isEmpty() ||
+                emailField.getText().trim().isEmpty() ||
+                checkInDate.getValue() == null ||
+                checkOutDate.getValue() == null) {
+                showInfo("Error", "Please fill in all required fields.");
+                return;
+            }
+
+            // Extra SSN validation
+            String ssn = ssnField.getText().trim();
+            if (ssn.length() < 14) {
+                showInfo("Invalid SSN", "SSN must be at least 14 characters.");
+                return;
+            }
+
+            // Validate dates
+            long days = ChronoUnit.DAYS.between(checkInDate.getValue(), checkOutDate.getValue());
+            if (days <= 0) {
+                showInfo("Invalid dates", "Check-out must be after check-in.");
+                return;
+            }
+
+            try {
+                // Create guest
+                Guest guest = new Guest(
+                    ssn,
+                    nameField.getText().trim(),
+                    phoneField.getText().trim(),
+                    emailField.getText().trim()
+                );
+
+                // Create reservation
+                Reservation reservation = new Reservation(
+                    "",  // ID will be generated by database
+                    guest,
+                    room,
+                    checkInDate.getValue(),
+                    checkOutDate.getValue()
+                );
+
+                // Save to database
+                boolean success = reservationDAO.addReservation(reservation);
+                
+                if (success) {
+                    showSuccess("Reservation Confirmed!", 
+                        "Room " + room.getRoomNumber() + " has been reserved for " + guest.getName());
+                    
+                    // Refresh the table to show updated status
+                    loadRoomsByType(selectedRoomType);
+                } else {
+                    showError("Failed to save reservation to database. Please try again.");
+                }
+
+            } catch (IllegalArgumentException ex) {
+                // Catch validation errors from Guest or Reservation
+                showInfo("Validation Error", ex.getMessage());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                showError("An error occurred while creating the reservation: " + ex.getMessage());
+            }
+        }
+    }
 
     @FXML
     private void handleRefresh() {
-        if (selectedRoomType != null) {
+        if (selectedRoomType != null && !selectedRoomType.isEmpty()) {
+            System.out.println("Refreshing rooms for type: " + selectedRoomType);
             loadRoomsByType(selectedRoomType);
+        } else {
+            showError("Cannot refresh: Room type not set.");
         }
     }
     
@@ -302,6 +319,14 @@ public class RoomReservationController {
     }
     
     private void showInfo(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    
+    private void showSuccess(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
