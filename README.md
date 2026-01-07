@@ -28,6 +28,7 @@ Auto-price Calc → Reservations Table (Stats/Extend/Cancel)
 | Maven | Build system |
 
 ## 📁 Project Structure
+```
 src/main/java/com/hotel/management/javafx/
 ├── App.java (FXML scene manager)
 ├── controller/
@@ -53,7 +54,7 @@ resources/
 ├── RoomReservationView.fxml
 ├── styles.css
 └── database.properties (.gitignore)
-
+```
 
 ## 🚀 Quick Setup
 ```bash
@@ -64,7 +65,7 @@ git clone https://github.com/HasanElakad/hotel-management-javafx.git
 ## 🗄️ Database Schema (EXACT from ReservationDAO)
 sql
 
-
+```
 CREATE DATABASE hotel_db;
 USE hotel_db;
 
@@ -110,7 +111,7 @@ INSERT INTO rooms VALUES
 (2,'102',2,'Double',120.00,1,TRUE,'Available'),
 (3,'201',3,'Triple',150.00,2,FALSE,'Occupied'),
 (4,'301',4,'Suite',220.00,3,TRUE,'Reserved');
-
+```
 
 ## 🔌 database.properties (NEVER COMMIT)
 text
