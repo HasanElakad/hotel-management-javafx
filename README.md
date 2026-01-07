@@ -137,9 +137,3 @@ text
 2. dashboard.fxml: 2×2 room cards w/ MaterialFX
 3. reservations.fxml: Stats + Reservations TableView
 4. RoomReservationView.fxml: Room selection + booking dialog
-
-## 🤝 Contributing
-bash
-git checkout -b feature/new-feature
-mvn clean javafx:run
-git push origin feature/new-feature
