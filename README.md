@@ -114,13 +114,13 @@ INSERT INTO rooms VALUES
 ```
 
 ## 🔌 database.properties (NEVER COMMIT)
-text
+```
 db.host=your-mysql-host
 db.port=3306
 db.name=hotel_db
 db.user=avnadmin
 db.password=your_token
-
+```
 ## 💰 Pricing Formula
 java
 total = nights × room.price × (extra_bed ? 1.1 : 1.0)
